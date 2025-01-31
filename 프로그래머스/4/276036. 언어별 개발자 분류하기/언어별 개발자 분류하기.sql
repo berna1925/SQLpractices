@@ -14,7 +14,9 @@ WITH FRONTEND_CODE AS (
     SELECT SUM(CODE) AS CODE 
     FROM SKILLCODES 
     WHERE CATEGORY = 'Front End'
-),
+), 
+# 비트 연산을 할 때는 SUM()을 하면 1이 있는 자리수가 모두 더해지므로 어떤 항목이 들어가 있는지 확인할 수 있다
+    
 PYTHON_CODE AS (
     SELECT CODE 
     FROM SKILLCODES 
@@ -25,6 +27,8 @@ CSHARP_CODE AS (
     FROM SKILLCODES 
     WHERE NAME = 'C#'
 )
+# WITH문은 WITH ~ AS (), ~ AS (), ~ AS() 식으로 병렬 구조로 작성이 가능하다!
+
 SELECT 
     CASE 
         WHEN d.SKILL_CODE & f.CODE > 0 AND d.SKILL_CODE & p.CODE > 0 THEN 'A'
