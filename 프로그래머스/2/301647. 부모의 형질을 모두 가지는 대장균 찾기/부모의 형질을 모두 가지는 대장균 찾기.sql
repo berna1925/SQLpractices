@@ -19,9 +19,27 @@
 #     AND MOD(P.GENOTYPE / 8, 2) <= MOD(EC.GENOTYPE / 8, 2) 
 # ORDER BY EC.ID;
 
-SELECT child.ID, child.GENOTYPE, parent.GENOTYPE AS PARENT_GENOTYPE
-FROM ECOLI_DATA child JOIN ECOLI_DATA parent ON child.PARENT_ID = parent.ID
-WHERE (child.GENOTYPE & parent.GENOTYPE) = parent.GENOTYPE
-# SQL에서 숫자의 이진수 비트를 참고하는 BITAND 함수가 있다. 이진수 자리수가 양측이 모두 1인 숫자가 있으면 그 자리수만 1을 따와서 최종 합산을 하는 함수다.
-# BITAND 함수는 BITAND(A, B) 꼴로 보통 쓰이지만 (A & B) = ?의 꼴로도 쓰일 수 있다. 아예 몰랐으니 이번 건 알아가자.
-ORDER BY child.ID;
+# SELECT child.ID, child.GENOTYPE, parent.GENOTYPE AS PARENT_GENOTYPE
+# FROM ECOLI_DATA child JOIN ECOLI_DATA parent ON child.PARENT_ID = parent.ID
+# WHERE (child.GENOTYPE & parent.GENOTYPE) = parent.GENOTYPE
+# ORDER BY child.ID;
+
+
+
+
+
+
+
+SELECT C.ID, C.GENOTYPE, P.GENOTYPE AS PARENT_GENOTYPE
+FROM ECOLI_DATA AS C JOIN ECOLI_DATA AS P
+WHERE C.PARENT_ID = P.ID AND
+(C.GENOTYPE & P.GENOTYPE = P.GENOTYPE)
+ORDER BY C.ID
+
+
+
+
+
+
+
+
