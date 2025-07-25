@@ -1,6 +1,9 @@
+# 2025-07-25 17:10 못 푼 문제
+# 한 번도 직접 써 본 적이 없는 3중 조인을 해야만 풀리는 문제
 SELECT I.ID, N.FISH_NAME, I.LENGTH
 FROM FISH_INFO I
 JOIN FISH_NAME_INFO N ON I.FISH_TYPE = N.FISH_TYPE
+# JOIN을 2번 하면 3개 집합의 교집합 부분만 범위로 선택됨
 JOIN (
     SELECT FISH_TYPE, MAX(LENGTH) AS MAX_LENGTH
     FROM FISH_INFO
