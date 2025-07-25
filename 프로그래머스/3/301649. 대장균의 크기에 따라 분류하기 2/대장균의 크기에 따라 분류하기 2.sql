@@ -8,6 +8,9 @@ FROM ECOLI_DATA
 ORDER BY ID ;
 
 
+# 2025-07-25에 쓴 방식
+# CASE WHEN 문에서 CASE를 연속으로 적어버리는 헛짓을 하는 바람에 계속 오류가 나서 풀이를 비튼 흔적이 있다.
+# CASE를 계속 쓰지만 않았다면 PERCENT_RANK를 써서 무난히 풀었을 문제
 
 # SELECT ID,
 # CASE WHEN ROW_NUMBER() OVER(ORDER BY SIZE_OF_COLONY DESC) <= COUNT(*) / 4 THEN "CRITICAL"
