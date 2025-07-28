@@ -1,3 +1,67 @@
+WITH SKILL_BITS AS (
+    SELECT
+        NAME,
+        CATEGORY,
+        CODE
+    FROM SKILLCODES
+    WHERE NAME IN ('Python', 'C#')
+       OR CATEGORY = 'Front End'
+),
+SKILL_GROUPS AS (
+    SELECT
+        NAME,
+        CATEGORY,
+        CODE,
+        CASE 
+            WHEN NAME = 'Python' THEN 'PYTHON'
+            WHEN NAME = 'C#' THEN 'CSHARP'
+            WHEN CATEGORY = 'Front End' THEN 'FRONTEND'
+        END AS SKILL_TYPE
+    FROM SKILL_BITS
+),
+DEV_SKILLS AS (
+    SELECT
+        D.ID,
+        D.EMAIL,
+        MAX(CASE WHEN S.SKILL_TYPE = 'PYTHON' THEN 1 ELSE 0 END) AS HAS_PYTHON,
+        MAX(CASE WHEN S.SKILL_TYPE = 'CSHARP' THEN 1 ELSE 0 END) AS HAS_CSHARP,
+        MAX(CASE WHEN S.SKILL_TYPE = 'FRONTEND' THEN 1 ELSE 0 END) AS HAS_FRONTEND
+    FROM DEVELOPERS D
+    JOIN SKILL_GROUPS S
+      ON D.SKILL_CODE & S.CODE != 0
+    GROUP BY D.ID, D.EMAIL
+),
+GRADE_RESULT AS (
+    SELECT
+        CASE 
+            WHEN HAS_FRONTEND = 1 AND HAS_PYTHON = 1 THEN 'A'
+            WHEN HAS_CSHARP = 1 THEN 'B'
+            WHEN HAS_FRONTEND = 1 THEN 'C'
+        END AS GRADE,
+        ID,
+        EMAIL
+    FROM DEV_SKILLS
+)
+SELECT *
+FROM GRADE_RESULT
+WHERE GRADE IS NOT NULL
+ORDER BY GRADE, ID;
+
+
+
+
+# SELECT CASE WHEN (SKILL_CODE & (16 + 2048 + 8192)) != 0 AND
+#                  (SKILL_CODE & 400) != 0 THEN 'A'
+#             WHEN (SKILL_CODE & 1024) != 0 THEN 'B'
+#             WHEN (SKILL_CODE & (16 + 2048 + 8192)) != 0 AND
+#                  (SKILL_CODE & 400) = 0 THEN 'C' END AS GRADE,
+#        ID, EMAIL
+# FROM DEVELOPERS
+# )
+# SELECT * FROM BASE B
+# WHERE B.GRADE IS NOT NULL
+# ORDER BY GRADE, ID ;
+
 # SELECT
 # CASE WHEN
 # (D.SKILL_CODE & 16 > 0) OR (D.SKILL_CODE & 2048 > 0) OR (D.SKILL_CODE & 8192 > 0)
@@ -10,39 +74,37 @@
 # CASE ELSE 'C' END AS GRADE, ID, EMAIL
 # FROM DEVELOPERS
 
-WITH FRONTEND_CODE AS (
-    SELECT SUM(CODE) AS CODE 
-    FROM SKILLCODES 
-    WHERE CATEGORY = 'Front End'
-), 
-# 비트 연산을 할 때는 SUM()을 하면 1이 있는 자리수가 모두 더해지므로 어떤 항목이 들어가 있는지 확인할 수 있다
-    
-PYTHON_CODE AS (
-    SELECT CODE 
-    FROM SKILLCODES 
-    WHERE NAME = 'Python'
-),
-CSHARP_CODE AS (
-    SELECT CODE 
-    FROM SKILLCODES 
-    WHERE NAME = 'C#'
-)
-# WITH문은 WITH ~ AS (), ~ AS (), ~ AS() 식으로 병렬 구조로 작성이 가능하다!
+# WITH FRONTEND_CODE AS (
+#     SELECT SUM(CODE) AS CODE 
+#     FROM SKILLCODES 
+#     WHERE CATEGORY = 'Front End'
+# ),
+# PYTHON_CODE AS (
+#     SELECT CODE 
+#     FROM SKILLCODES 
+#     WHERE NAME = 'Python'
+# ),
+# CSHARP_CODE AS (
+#     SELECT CODE 
+#     FROM SKILLCODES 
+#     WHERE NAME = 'C#'
+# )
+# SELECT 
+#     CASE 
+#         WHEN d.SKILL_CODE & f.CODE > 0 AND d.SKILL_CODE & p.CODE > 0 THEN 'A'
+#         WHEN d.SKILL_CODE & c.CODE > 0 THEN 'B'
+#         WHEN d.SKILL_CODE & f.CODE > 0 THEN 'C'
+#     END AS GRADE,
+#     d.ID,
+#     d.EMAIL
+# FROM DEVELOPERS d
+# JOIN FRONTEND_CODE f ON 1=1
+# JOIN PYTHON_CODE p ON 1=1
+# JOIN CSHARP_CODE c ON 1=1
+# WHERE 
+#     (d.SKILL_CODE & f.CODE > 0 AND d.SKILL_CODE & p.CODE > 0)
+#     OR (d.SKILL_CODE & c.CODE > 0)
+#     OR (d.SKILL_CODE & f.CODE > 0)
+# ORDER BY GRADE, d.ID 
 
-SELECT 
-    CASE 
-        WHEN d.SKILL_CODE & f.CODE > 0 AND d.SKILL_CODE & p.CODE > 0 THEN 'A'
-        WHEN d.SKILL_CODE & c.CODE > 0 THEN 'B'
-        WHEN d.SKILL_CODE & f.CODE > 0 THEN 'C'
-    END AS GRADE,
-    d.ID,
-    d.EMAIL
-FROM DEVELOPERS d
-JOIN FRONTEND_CODE f ON 1=1
-JOIN PYTHON_CODE p ON 1=1
-JOIN CSHARP_CODE c ON 1=1
-WHERE 
-    (d.SKILL_CODE & f.CODE > 0 AND d.SKILL_CODE & p.CODE > 0)
-    OR (d.SKILL_CODE & c.CODE > 0)
-    OR (d.SKILL_CODE & f.CODE > 0)
-ORDER BY GRADE, d.ID ;
+# WITH BASE AS (
