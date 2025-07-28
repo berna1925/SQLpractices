@@ -1,51 +1,25 @@
-WITH SKILL_BITS AS (
-    SELECT
-        NAME,
-        CATEGORY,
-        CODE
-    FROM SKILLCODES
-    WHERE NAME IN ('Python', 'C#')
-       OR CATEGORY = 'Front End'
-),
-SKILL_GROUPS AS (
-    SELECT
-        NAME,
-        CATEGORY,
-        CODE,
-        CASE 
-            WHEN NAME = 'Python' THEN 'PYTHON'
-            WHEN NAME = 'C#' THEN 'CSHARP'
-            WHEN CATEGORY = 'Front End' THEN 'FRONTEND'
-        END AS SKILL_TYPE
-    FROM SKILL_BITS
-),
-DEV_SKILLS AS (
-    SELECT
-        D.ID,
-        D.EMAIL,
-        MAX(CASE WHEN S.SKILL_TYPE = 'PYTHON' THEN 1 ELSE 0 END) AS HAS_PYTHON,
-        MAX(CASE WHEN S.SKILL_TYPE = 'CSHARP' THEN 1 ELSE 0 END) AS HAS_CSHARP,
-        MAX(CASE WHEN S.SKILL_TYPE = 'FRONTEND' THEN 1 ELSE 0 END) AS HAS_FRONTEND
-    FROM DEVELOPERS D
-    JOIN SKILL_GROUPS S
-      ON D.SKILL_CODE & S.CODE != 0
-    GROUP BY D.ID, D.EMAIL
-),
-GRADE_RESULT AS (
-    SELECT
-        CASE 
-            WHEN HAS_FRONTEND = 1 AND HAS_PYTHON = 1 THEN 'A'
-            WHEN HAS_CSHARP = 1 THEN 'B'
-            WHEN HAS_FRONTEND = 1 THEN 'C'
-        END AS GRADE,
-        ID,
-        EMAIL
-    FROM DEV_SKILLS
-)
-SELECT *
-FROM GRADE_RESULT
-WHERE GRADE IS NOT NULL
-ORDER BY GRADE, ID;
+# 2025-07-28 못 푼 문제
+# CODE의 이진수들을 보고 이진수에 너무 집착한 나머지 다른 풀이법을 생각 못했다..
+
+SELECT 
+  CASE
+    WHEN SUM(CASE WHEN a.CATEGORY = 'Front End' THEN 1 ELSE 0 END) > 0 AND 
+         SUM(CASE WHEN a.NAME = 'Python' THEN 1 ELSE 0 END) > 0 THEN 'A'
+    # CASE WHEN 절 안에 또 CASE WHEN 절을 쓴 엄청난 창의력;
+    # END는 조건이 몇 개 오든 그 외 조건을 무시하도록 하는 걸 이용해 1줄씩 깔끔하게 정리
+    # 해당되는 곳을 1로 취급하게 하고 1이 반환된 곳을 
+    WHEN SUM(CASE WHEN a.NAME = 'C#' THEN 1 ELSE 0 END) > 0 THEN 'B'
+    WHEN SUM(CASE WHEN a.CATEGORY = 'Front End' THEN 1 ELSE 0 END) > 0 THEN 'C' 
+  END AS GRADE,
+  b.ID, 
+  b.EMAIL
+FROM SKILLCODES AS a JOIN DEVELOPERS AS b ON (a.CODE & b.SKILL_CODE) != 0
+# ON절에 공통된 칼럼 외에 다른 것도 올 수 있단 걸 처음 알았다.. 알아둡시다
+        
+GROUP BY b.ID, b.EMAIL
+HAVING GRADE IS NOT NULL
+ORDER BY GRADE ASC, b.ID ASC;
+
 
 
 
