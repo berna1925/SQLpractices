@@ -1,3 +1,6 @@
+# 2025-08-01 자력 해결
+# 푸는 데 15분 넘게 걸렸는데 구매 건수를 세는 것이 아니라 구매한 유저 수를 세는 것이었다..
+
 WITH CLEAR_USERS AS (
     SELECT *
     FROM USER_INFO
