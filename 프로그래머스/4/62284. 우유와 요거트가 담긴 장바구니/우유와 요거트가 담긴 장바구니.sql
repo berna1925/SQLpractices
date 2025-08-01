@@ -1,3 +1,6 @@
+# 2025-08-01 16:10 자력 해결
+# MySQL에선 INTERSECT가 안 먹힌다고 한다.. 오라클에선 쓰도록 하자
+
 SELECT CART_ID
 FROM CART_PRODUCTS
 WHERE NAME = 'Milk'
