@@ -1,3 +1,6 @@
+# 2025-08-02 자력 해결
+# CATEGORY를 내림차순으로 쓰라 했는데 애먼 칼럼을 넣어놓고 왜 안 되냐고 헤매고 있었다
+
 WITH CALC AS (
     SELECT B.BOOK_ID, AUTHOR_ID, CATEGORY, PRICE, SALES, SALES_DATE
     FROM BOOK B JOIN BOOK_SALES S ON B.BOOK_ID = S.BOOK_ID
