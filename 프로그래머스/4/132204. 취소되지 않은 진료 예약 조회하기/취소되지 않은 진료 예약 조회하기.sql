@@ -1,3 +1,6 @@
+# 2025-08-02 내 의견 90% GPT 의견 10%
+# 의사가 아니라 진료부서로 JOIN 하는 바람에 중복 JOIN이 발생한 케이스
+
 WITH FILTER AS (
     SELECT APNT_NO, PT_NO, D.MCDP_CD, DR_NAME,
            APNT_YMD
