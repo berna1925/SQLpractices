@@ -1,3 +1,28 @@
+# 2025-08-03 14:15 못 푼 문제
+WITH users_2021 AS (
+
+    SELECT USER_ID
+    FROM USER_INFO
+     WHERE YEAR(JOINED) = 2021
+ ),
+ purchased_users AS (
+     SELECT DISTINCT YEAR(SALES_DATE) AS YEAR,
+            MONTH(SALES_DATE) AS MONTH,
+            USER_ID
+     FROM ONLINE_SALE
+     WHERE USER_ID IN (SELECT USER_ID FROM users_2021)
+ )
+
+ SELECT 
+     p.YEAR, 
+     p.MONTH,
+     COUNT(p.USER_ID) AS PURCHASED_USERS,
+     ROUND(COUNT(p.USER_ID) / (SELECT COUNT(*) FROM users_2021), 1) AS PURCHASED_RATIO
+ FROM purchased_users p
+ GROUP BY p.YEAR, p.MONTH
+ ORDER BY p.YEAR, p.MONTH;
+
+
 # WITH FILTER AS (
 #     SELECT YEAR(SALES_DATE) AS YEAR, MONTH(SALES_DATE) AS MONTH,
 #            U.USER_ID, PRODUCT_ID
@@ -8,29 +33,7 @@
 # FROM FILTER
 # GROUP BY YEAR, MONTH
 
-# WITH users_2021 AS (
-#     -- 2021년에 가입한 회원 목록
-#     SELECT USER_ID
-#     FROM USER_INFO
-#     WHERE YEAR(JOINED) = 2021
-# ),
-# purchased_users AS (
-#     -- 2021년 가입자 중 실제로 구매한 회원들의 년, 월 추출
-#     SELECT DISTINCT YEAR(SALES_DATE) AS YEAR,
-#            MONTH(SALES_DATE) AS MONTH,
-#            USER_ID
-#     FROM ONLINE_SALE
-#     WHERE USER_ID IN (SELECT USER_ID FROM users_2021)
-# )
-# -- 최종 결과 생성
-# SELECT 
-#     p.YEAR, 
-#     p.MONTH,
-#     COUNT(p.USER_ID) AS PURCHASED_USERS,
-#     ROUND(COUNT(p.USER_ID) / (SELECT COUNT(*) FROM users_2021), 1) AS PURCHASED_RATIO
-# FROM purchased_users p
-# GROUP BY p.YEAR, p.MONTH
-# ORDER BY p.YEAR, p.MONTH;
+# 
     
 # WITH JOINED_2021_SALES_TABLE AS (
 #     SELECT YEAR(O.SALES_DATE) AS YEAR, MONTH(O.SALES_DATE) AS MONTH, U.USER_ID
