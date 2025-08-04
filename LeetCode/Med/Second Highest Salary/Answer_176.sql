@@ -1,5 +1,6 @@
 # 2025-08-04 15:00 30분 걸려서 풀지 못한 문제
-## 마지막으로 자력 작성한 코드
+마지막으로 자력 작성한 코드
+    
 WITH RANKS AS (
     SELECT id, salary, ROW_NUMBER() OVER (ORDER BY salary) AS Ranking
     FROM Employee
