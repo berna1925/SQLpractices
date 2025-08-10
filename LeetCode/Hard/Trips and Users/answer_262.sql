@@ -66,8 +66,8 @@ LEFT JOIN을 써서 NULL이 나오도록 한 다음 COALESCE로 NULL일 경우 0
 SELECT 
     T.request_at AS Day,
     ROUND(
-        SUM(CASE WHEN T.status IN ('cancelled_by_driver', 'cancelled_by_client') THEN 1 ELSE 0 END) * 1.0 /
-        COUNT(*),
+        SUM(CASE WHEN T.status IN ('cancelled_by_driver', 'cancelled_by_client') THEN 1 ELSE 0 END) * 1.0
+            / COUNT(*),
         2
     ) AS `Cancellation Rate`
 FROM Trips T
@@ -80,4 +80,5 @@ ORDER BY T.request_at;
 CASE WHEN에 경우의 수를 TRUE=1, FALSE=0으로 넣고 합산한 뒤 일별 개수로 나눠서 확률을 평균값으로 구한 천재적인 방법
 결국 어떤 풀이든 3중 조인으로 서브쿼리 개수를 줄이는 전략이 유효
 
-
+<< CASE WHEN sth IN (~) THEN 1 ELSE 0 END >>
+이건 다른 곳에서도 써먹을 법하니 템플릿처럼 외워두자
